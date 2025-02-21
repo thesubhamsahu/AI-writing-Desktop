@@ -97,10 +97,10 @@
             border-radius: 8px;
             padding: 0.75rem 1rem;
             color: #fff;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease, color: 0.3s ease;
             word-break: break-word;
             width: calc(100%);
-            box-sizing: border-box;
+            box-sizing: box-sizing;
             min-height: 40px;
              font-size: 1rem;
              line-height: 1.4;
@@ -177,7 +177,6 @@
         }
 
         .send-button:hover,
-        .speed-control-button:hover,
         .prompt-change-button:hover {
             background-color: #555;
         }
@@ -226,100 +225,93 @@
         }
 
         /* Dark mode styles */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #121212;
-                color: #fff;
-            }
-
-            header {
-                background-color: #1e1e1e;
-                color: #fff;
-            }
-
-            .message-box {
-                background-color: #333;
-                color: #fff;
-            }
-
-            .input-box {
-                background-color: #1e1e1e;
-            }
-
-            .typing-form {
-                background-color: #1e1e1e;
-            }
-
-            .send-button,
-            .speed-control-button,
-            .prompt-change-button {
-                background-color: #333;
-                color: #fff;
-            }
-
-            .send-button:hover,
-            .speed-control-button:hover,
-            .prompt-change-button:hover {
-                background-color: #555;
-            }
-
-            .adjective { color: lightpink; }
-            .noun { color: lightcoral; }
-            .adverb { color: lightgreen; }
-            .verb { color: lightblue; }
-            .conjunction { color: plum; }
-
-            .blinking-cursor {
-                background-color: #fff;
-            }
+        body.dark-theme {
+            background-color: #121212;
+            color: #fff;
         }
 
+        body.dark-theme header {
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+
+        body.dark-theme .message-box {
+            background-color: #333;
+            color: #fff;
+        }
+
+        body.dark-theme .input-box {
+            background-color: #1e1e1e;
+        }
+
+        body.dark-theme .typing-form {
+            background-color: #1e1e1e;
+        }
+
+        body.dark-theme .send-button,
+        body.dark-theme .prompt-change-button {
+            background-color: #333;
+            color: #fff;
+        }
+
+        body.dark-theme .send-button:hover,
+        body.dark-theme .prompt-change-button:hover {
+            background-color: #555;
+        }
+
+        body.dark-theme .adjective { color: lightpink; }
+        body.dark-theme .noun { color: lightcoral; }
+        body.dark-theme .adverb { color: lightgreen; }
+        body.dark-theme .verb { color: lightblue; }
+        body.dark-theme .conjunction { color: plum; }
+
+        body.dark-theme .blinking-cursor {
+            background-color: #fff;
+        }
+
+
         /* Light mode styles */
-        @media (prefers-color-scheme: light) {
-            body {
-                background-color: #fff;
-                color: #000;
-            }
+        body.light-theme {
+            background-color: #fff;
+            color: #000;
+        }
 
-            header {
-                background-color: #eee;
-                color: #000;
-            }
+        body.light-theme header {
+            background-color: #eee;
+            color: #000;
+        }
 
-            .message-box {
-                background-color: #eee;
-                color: #000;
-            }
+        body.light-theme .message-box {
+            background-color: #eee;
+            color: #000;
+        }
 
-            .input-box {
-                background-color: #eee;
-            }
+        body.light-theme .input-box {
+            background-color: #eee;
+        }
 
-            .typing-form {
-                background-color: #eee;
-            }
+        body.light-theme .typing-form {
+            background-color: #eee;
+        }
 
-            .send-button,
-            .speed-control-button,
-            .prompt-change-button {
-                background-color: #ccc;
-                color: #000;
-            }
+        body.light-theme .send-button,
+        body.light-theme .prompt-change-button {
+            background-color: #ccc;
+            color: #000;
+        }
 
-            .send-button:hover,
-            .speed-control-button:hover,
-            .prompt-change-button:hover {
-                background-color: #aaa;
-            }
+        body.light-theme .send-button:hover,
+        body.light-theme .prompt-change-button:hover {
+            background-color: #aaa;
+        }
 
-            .blinking-cursor {
-                background-color: #000;
-            }
+        body.light-theme .blinking-cursor {
+            background-color: #000;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/compromise@14.8.1/builds/compromise.min.js"></script>
 </head>
-<body>
+<body class="dark-theme"> <!-- Default to dark theme -->
 <header>
     <div class="header-buttons">
     </div>
@@ -335,6 +327,7 @@
     const typingForm = document.querySelector(".typing-form");
     const animationContainer = document.querySelector(".animation-container");
     const promptChangeButton = document.getElementById("prompt-change");
+    const body = document.body;
 
     const API_KEY = "AIzaSyCH_a36UpmdGBrXFscwR4OGRJkH4MNNmpg";
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
@@ -591,6 +584,28 @@
         INITIAL_PROMPT = selectedPrompt.prompt;
         promptChangeButton.textContent = selectedPrompt.label;
     });
+
+
+    function toggleTheme() {
+        if (body.classList.contains('dark-theme')) {
+            body.classList.remove('dark-theme');
+            body.classList.add('light-theme');
+        } else {
+            body.classList.remove('light-theme');
+            body.classList.add('dark-theme');
+        }
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowRight') {
+            normalSpeed = Math.max(100, normalSpeed - 100); // Decrease speed with right arrow (faster animation)
+        } else if (event.key === 'ArrowLeft') {
+            normalSpeed = Math.min(2000, normalSpeed + 100); // Increase speed with left arrow (slower animation)
+        } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            toggleTheme();
+        }
+    });
+
 
     let touchStartX = 0;
     let currentPageIndex = 0;
