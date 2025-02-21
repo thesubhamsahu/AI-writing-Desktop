@@ -165,7 +165,8 @@
 
         .send-button,
         .speed-control-button,
-        .prompt-change-button {
+        .prompt-change-button,
+        #theme-toggle-button { /* Add theme-toggle-button to the selector group */
             padding: 0.5rem 1rem;
             border: none;
             border-radius: 4px;
@@ -177,7 +178,9 @@
         }
 
         .send-button:hover,
-        .prompt-change-button:hover {
+        .speed-control-button:hover,
+        .prompt-change-button:hover,
+        #theme-toggle-button:hover { /* Add theme-toggle-button to the hover selector group */
             background-color: #555;
         }
 
@@ -249,13 +252,17 @@
         }
 
         body.dark-theme .send-button,
-        body.dark-theme .prompt-change-button {
+        body.dark-theme .speed-control-button,
+        body.dark-theme .prompt-change-button,
+        body.dark-theme #theme-toggle-button { /* Add theme-toggle-button for dark mode */
             background-color: #333;
             color: #fff;
         }
 
         body.dark-theme .send-button:hover,
-        body.dark-theme .prompt-change-button:hover {
+        body.dark-theme .speed-control-button:hover,
+        body.dark-theme .prompt-change-button:hover,
+        body.dark-theme #theme-toggle-button:hover { /* Add theme-toggle-button for dark mode hover */
             background-color: #555;
         }
 
@@ -295,13 +302,17 @@
         }
 
         body.light-theme .send-button,
-        body.light-theme .prompt-change-button {
+        body.light-theme .speed-control-button,
+        body.light-theme .prompt-change-button,
+        body.light-theme #theme-toggle-button { /* Add theme-toggle-button for light mode */
             background-color: #ccc;
             color: #000;
         }
 
         body.light-theme .send-button:hover,
-        body.light-theme .prompt-change-button:hover {
+        body.light-theme .speed-control-button:hover,
+        body.light-theme .prompt-change-button:hover,
+        body.light-theme #theme-toggle-button:hover { /* Add theme-toggle-button for light mode hover */
             background-color: #aaa;
         }
 
@@ -322,11 +333,17 @@
     <button type="button" class="prompt-change-button" id="prompt-change">Essay</button>
     <input type="text" class="typing-input" placeholder="Type a message..."/>
     <button type="submit" class="send-button">Send</button>
+    <button type="button" class="speed-control-button" id="decrease-speed">speed-</button>  <!-- Speed- button moved here -->
+    <button type="button" class="send-button" id="theme-toggle-button">Theme</button>
+    <button type="button" class="speed-control-button" id="increase-speed">speed+</button>
 </form>
 <script>
     const typingForm = document.querySelector(".typing-form");
     const animationContainer = document.querySelector(".animation-container");
+    const decreaseSpeedButton = document.getElementById("decrease-speed");
+    const increaseSpeedButton = document.getElementById("increase-speed");
     const promptChangeButton = document.getElementById("prompt-change");
+    const themeToggleButton = document.getElementById("theme-toggle-button"); // Get the theme toggle button
     const body = document.body;
 
     const API_KEY = "AIzaSyCH_a36UpmdGBrXFscwR4OGRJkH4MNNmpg";
@@ -577,6 +594,13 @@
         fetchResponse(inputText);
     });
 
+    decreaseSpeedButton.addEventListener('click', () => {
+        normalSpeed = Math.min(2000, normalSpeed + 100);
+    });
+
+    increaseSpeedButton.addEventListener('click', () => {
+        normalSpeed = Math.max(100, normalSpeed - 100);
+    });
 
     promptChangeButton.addEventListener('click', () => {
         currentPromptIndex = (currentPromptIndex + 1) % promptOptions.length;
@@ -585,6 +609,9 @@
         promptChangeButton.textContent = selectedPrompt.label;
     });
 
+    themeToggleButton.addEventListener('click', () => { // Event listener for theme toggle button
+        toggleTheme();
+    });
 
     function toggleTheme() {
         if (body.classList.contains('dark-theme')) {
@@ -598,9 +625,9 @@
 
     document.addEventListener('keydown', function(event) {
         if (event.key === 'ArrowRight') {
-            normalSpeed = Math.max(100, normalSpeed - 100); // Decrease speed with right arrow (faster animation)
+            increaseSpeedButton.click();
         } else if (event.key === 'ArrowLeft') {
-            normalSpeed = Math.min(2000, normalSpeed + 100); // Increase speed with left arrow (slower animation)
+            decreaseSpeedButton.click();
         } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
             toggleTheme();
         }
